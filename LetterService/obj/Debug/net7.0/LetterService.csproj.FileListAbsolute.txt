@@ -13,3 +13,4 @@ C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\refint\
 C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.pdb
 C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.genruntimeconfig.cache
 C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\ref\LetterService.dll
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.dll.config
