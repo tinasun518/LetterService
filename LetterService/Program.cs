@@ -15,7 +15,13 @@ namespace ConsoleApp
         {
             // Combine the contents of inputFile1 and inputFile2 into resultFile
             string content1 = File.ReadAllText(inputFile1);
-            string content2 = File.ReadAllText(inputFile2);
+            string content2 = string.Empty;
+
+            if (!string.IsNullOrEmpty(inputFile2))
+            {
+                content2 = File.ReadAllText(inputFile2);
+            }
+
             string combinedContent = content1 + Environment.NewLine + content2;
             File.WriteAllText(resultFile, combinedContent);
         }
@@ -31,7 +37,7 @@ namespace ConsoleApp
             // Create an instance of the LetterService
             ILetterService letterService = new LetterService();
 
-            string rootFolder = "C:\\Users\\kelma\\source\\repos\\CombinedLetters";
+            string rootFolder = "C:\\Users\\kelma\\source\\repos\\LetterService\\CombinedLetters";
             string inputFolder = Path.Combine(rootFolder, "Input");
             string archiveFolder = Path.Combine(rootFolder, "Archive");
             string outputFolder = Path.Combine(rootFolder, "Output");
@@ -68,40 +74,62 @@ namespace ConsoleApp
 
                 if (Directory.Exists(targetFolderPath))
                 {
+                    var combinedLetters = new Dictionary<string, List<string>>();
+
                     string[] letterFiles = Directory.GetFiles(targetFolderPath, "*.txt");
 
                     foreach (string letterFile in letterFiles)
                     {
                         string universityID = Path.GetFileNameWithoutExtension(letterFile).Substring(10);
+
+                        if (!combinedLetters.ContainsKey(universityID))
+                        {
+                            combinedLetters[universityID] = new List<string>();
+                        }
+
+                        combinedLetters[universityID].Add(letterFile);
+                    }
+
+                    foreach (var kvp in combinedLetters)
+                    {
+                        string universityID = kvp.Key;
+                        List<string> letterFilesForUniversity = kvp.Value;
+
                         string combinedLetterPath = Path.Combine(outputFolder, $"combined-{universityID}.txt");
 
-                        // Check if any existing combined letter for the same university ID exists
-                        if (File.Exists(combinedLetterPath))
+                        if (letterFilesForUniversity.Count == 1)
                         {
-                            // Read the existing combined letter content
-                            string existingCombinedContent = File.ReadAllText(combinedLetterPath);
-
-                            // Read the current letter content
-                            string currentLetterContent = File.ReadAllText(letterFile);
-
-                            // Combine the current letter content with the existing combined letter content
-                            string combinedContent = existingCombinedContent + Environment.NewLine + currentLetterContent;
-
-                            // Update the combined letter file with the new content
-                            File.WriteAllText(combinedLetterPath, combinedContent);
+                            // Only one letter file, no need to combine
+                            File.Copy(letterFilesForUniversity[0], combinedLetterPath);
                         }
                         else
                         {
-                            // No existing combined letter, create a new one
-                            letterService.CombineTwoLetters(letterFile, string.Empty, combinedLetterPath);
+                            // Combine multiple letter files
+                            CombineMultipleLetters(letterFilesForUniversity, combinedLetterPath, letterService);
                         }
-
                     }
-
                 }
             }
         }
+
+        static void CombineMultipleLetters(List<string> letterFiles, string combinedLetterPath, ILetterService letterService)
+        {
+            // Sort the letter files to ensure consistent ordering
+            letterFiles.Sort();
+
+            // Start with the first letter file
+            string firstLetterFile = letterFiles[0];
+            File.Copy(firstLetterFile, combinedLetterPath);
+
+            // Combine subsequent letter files
+            for (int i = 1; i < letterFiles.Count; i++)
+            {
+                string currentLetterFile = letterFiles[i];
+                letterService.CombineTwoLetters(combinedLetterPath, currentLetterFile, combinedLetterPath);
+            }
+        
     }
+}
 
     // ...
     // Rest of the code
