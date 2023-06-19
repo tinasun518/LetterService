@@ -1,0 +1,15 @@
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.exe
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.deps.json
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.runtimeconfig.json
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.dll
+C:\Users\kelma\source\repos\LetterService\LetterService\bin\Debug\net7.0\LetterService.pdb
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.csproj.AssemblyReference.cache
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.AssemblyInfoInputs.cache
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.AssemblyInfo.cs
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.csproj.CoreCompileInputs.cache
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.dll
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\refint\LetterService.dll
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.pdb
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\LetterService.genruntimeconfig.cache
+C:\Users\kelma\source\repos\LetterService\LetterService\obj\Debug\net7.0\ref\LetterService.dll
