@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -23,11 +24,14 @@ namespace LetterService
     class Program
     {
         //Set default values
-        static string rootFolder = "CombinedLetters";
+        static string rootFolder = "C:\\temp\\CombinedLetters";
         static string inputFolder = Path.Combine(rootFolder, "Input");
         static string archiveFolder = Path.Combine(rootFolder, "Archive");
         static string outputFolder = Path.Combine(rootFolder, "Output");
-        static string processDate = "20220125"; //DateTime.Now.ToString("yyyyMMdd");
+        static string processDate = DateTime.Now.ToString("yyyyMMdd");
+
+        //Set variable for report
+        static List<string> processedStudentIds = new List<string>();
 
         static void Main(string[] args)
         {
@@ -79,11 +83,13 @@ namespace LetterService
                         outputFolder = value;
                         break;
                     case "-d":
-                        if (!DateTime.TryParseExact(value, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out _))
+                        DateTime temp = DateTime.Now;
+                        if (!DateTime.TryParseExact(value, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out temp))
                         {
                             Console.WriteLine("Invalid date format. Expected format: yyyyMMdd");
                             return false;
                         }
+                        processDate = value;
                         break;
                     case "-r":
                         if (!Directory.Exists(value)) { return false; }
@@ -117,6 +123,21 @@ namespace LetterService
             var letterFiles = GetAllFilesToBeProcessed(new List<string> { admissionFolder, scholarshipFolder });
             // Process admission letters
             ProcessLetters(letterFiles, outputFolder, letterService, archiveFolder);
+            GenerateReport();
+        }
+
+        static void GenerateReport()
+        {
+            string parsedDate = DateTime.ParseExact(processDate, "yyyyMMdd",
+                CultureInfo.InvariantCulture).ToString("MM/dd/yyyy");
+            string content = parsedDate + " Report" + Environment.NewLine;
+            content += new string('-', 30) + Environment.NewLine;
+            content += "Number of Combined Letters: " + processedStudentIds.Count + Environment.NewLine;
+            foreach (string id in processedStudentIds)
+            {
+                content += new string(' ', 4) + id + Environment.NewLine;
+            }
+            File.AppendAllText(Path.Combine(outputFolder, "report.txt"), content);
         }
 
         static List<string> GetAllFilesToBeProcessed(List<string> filePaths)
@@ -140,9 +161,14 @@ namespace LetterService
             foreach (string studentId in groupedLetters.Keys)
             {
                 List<string> letterFilesForStudent = groupedLetters[studentId];
-                string letterPathForCombine = Path.Combine(outputFolder, $"combined-{studentId}.txt");
-                CombineMultipleLetters(letterFilesForStudent, letterPathForCombine, letterService);
+                string letterPathForCombine = Path.Combine(outputFolder, $"Combined-{studentId}.txt");
+                if (letterFilesForStudent.Count > 1) { CombineMultipleLetters(letterFilesForStudent, letterPathForCombine, letterService); }
+                else
+                {
+                    File.Copy(letterFilesForStudent[0], Path.Combine(outputFolder, Path.GetFileName(letterFilesForStudent[0])));
+                }
                 ArchiveFiles(letterFilesForStudent, archiveFolder);
+                if (letterFilesForStudent.Count > 1) { processedStudentIds.Add(studentId); }
             }
         }
 
